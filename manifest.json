@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "BanditChamp",
   "version": "1.0",
-  "description": "Bandit Camp'teki ücretsiz kasa savaşlarına otomatik olarak katılmanıza yardımcı olur.",
+  "description": "Helps you to open crate battles in bandit.camp",
   "permissions": [
     "tabs",
     "https://bandit.camp/"
