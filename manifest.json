@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name": "BanditChamp",
+  "version": "1.0",
+  "description": "Bandit Camp'teki ücretsiz kasa savaşlarına otomatik olarak katılmanıza yardımcı olur.",
+  "permissions": [
+    "tabs",
+    "https://bandit.camp/"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://bandit.camp/"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/icon_16.png",
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+    }
+    
+  },
+  "icons": {
+    "16": "icons/icon_16.png",
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  }
+  
+}
