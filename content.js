@@ -1,6 +1,4 @@
 var lastOpenedLink = "";
-var disabled = false;
-var intervalId;
 
 function joinBattle() {
   const nodes = document.querySelectorAll(".chat-message");
@@ -23,13 +21,11 @@ function joinBattle() {
   }
 }
 
-function disableOrEnableOnMessage(disabled) {
-  console.log(`Extension stopped == ${disabled}`)
-  if (disabled) {
-    clearInterval(intervalId);
-  }
-  else {
-    intervalId = setInterval(joinBattle, 1000);
+function enableSpecifiedExtension(response) {
+  const disabled = response.extensionDisabled;
+  console.log(`Extension disabled == ${disabled}`)
+  if (!disabled) {
+    setInterval(joinBattle, 1000);
   }
 }
 
@@ -55,8 +51,4 @@ function clickButton() {
   simulateMouseEvent(theButton, "click", coordX, coordY)
 }
 
-intervalId = setInterval(joinBattle, 1000);
-
-chrome.runtime.sendMessage({ action: "contentLoad" }, function(response) {
-  disableOrEnableOnMessage(response.extensionDisabled);
-});
+chrome.runtime.sendMessage({ action: "contentLoad" }, enableSpecifiedExtension);
