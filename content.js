@@ -9,14 +9,17 @@ function joinBattle() {
   if (messageToken !== null) {
     const redirectLink = messageToken.href;
 
-    if (redirectLink.includes("crate-battles") && redirectLink !== lastOpenedLink) {
-      const handled = window.open(redirectLink);
-			if (handled) { 
+    if (redirectLink !== undefined && redirectLink.includes("crate-battles") && redirectLink !== lastOpenedLink) {
+      const openWindow = window.open(redirectLink);
+			if (openWindow) { 
 				lastOpenedLink = redirectLink;
 			}
       else {
         alert("disable your popup & redirect blocker or you will be sad :(");
+        return;
       }
+
+      handleOpenWindow(openWindow);
     }
   }
 }
@@ -25,8 +28,26 @@ function enableSpecifiedExtension(response) {
   const disabled = response.extensionDisabled;
   console.log(`Extension disabled == ${disabled}`)
   if (!disabled) {
-    setInterval(joinBattle, 1000);
+    setInterval(joinBattle, 100);
   }
+}
+
+function handleOpenWindow(openWindow) {
+  openWindow.addEventListener('load', () => {
+    const joinable = getJoinButtons(openWindow.document);
+
+    if (!joinable.canJoin) {
+      openWindow.close();
+      return;
+    }
+
+    console.log("joinable battle found!");
+
+    const specifiedNumber = getRandom(joinable.joinButtons.length);
+    const button = joinable.joinButtons[specifiedNumber];
+
+    clickButton(button);
+  });
 }
 
 // Special thanks to https://stackoverflow.com/questions/55059006/simulate-a-real-human-mouse-click-in-pure-javascript#comment131936413_55068681
@@ -41,14 +62,25 @@ function simulateMouseEvent(element, eventName, coordX, coordY) {
   }));
 }
 
-function clickButton() {
-  var theButton = document.querySelector(".v-btn");
-
+function clickButton(theButton) {
   var box = theButton.getBoundingClientRect(),
   coordX = box.left + (box.right - box.left) / 2,
   coordY = box.top + (box.bottom - box.top) / 2;
 
   simulateMouseEvent(theButton, "click", coordX, coordY)
+}
+
+function getJoinButtons(document) {
+  const joinButtons = document.querySelectorAll(".empty-ctn");
+
+  return {
+    joinButtons,
+    canJoin : joinButtons.length !== 0,
+  };
+}
+
+function getRandom(max) {
+  return Math.floor(Math.random() * max);
 }
 
 chrome.runtime.sendMessage({ action: "contentLoad" }, enableSpecifiedExtension);
