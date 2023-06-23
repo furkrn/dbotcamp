@@ -1,7 +1,7 @@
 ## The first attempt of creating an extension, introducing dbotcamp.
 
 ### What is this?
-An extension for opening crate battle links on bandit.camp
+An extension for opening **FREE** crate battle links which is written on the chat on bandit.camp but currently it opens all of the crate battle links because I wasn't able to figure how crate battle can be free. :(
 
 ### You used your skills for this instead of Oty, right?
 This is much more simpler and did this for a friend, also I kinda learnt the basics of Javascript which is great.
