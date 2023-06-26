@@ -1,11 +1,9 @@
-## The first attempt of creating an extension, introducing dbotcamp.
+## dbotcamp : An *ugly* extension for opening crate battle links on the chat.
 
-### What is this?
-An extension for opening **FREE** crate battle links which is written on the chat on bandit.camp but currently it opens all of the crate battle links because I wasn't able to figure how crate battle can be free. :(
-
-### You used your skills for this instead of Oty, right?
-This is much more simpler and did this for a friend, also I kinda learnt the basics of Javascript which is great.
-
+### Warning
+**Even if I told you "I've built for fun", I'm not responsible for any damages done to your BanditCamp account, you are responsible for all of the risk. Read [BanditCamp Terms of Services](https://bandit.camp/terms) for more details**
+### Why?
+We built this extension for fun. REALLY.
 ### Installation
 - Download this repository with [by clicking to here](https://github.com/furkrn/dbotcamp/archive/refs/heads/master.zip)
 - Extract the zip.
