@@ -73,14 +73,22 @@ function clickButton(theButton) {
 function getJoinButtons(document) {
   const joinButtons = document.querySelectorAll(".empty-ctn");
 
+  const nullableGamePrice = document.querySelector(".game-price") 
+  const canJoin = nullableGamePrice !== null // it's not great but will help.
+    ? nullableGamePrice.getElementsByTagName("span")[0].innerText === 'Free'
+    : false;
+  
+  console.log(`is it free : ${canJoin}`)
+
   return {
     joinButtons,
-    canJoin : joinButtons.length !== 0,
+    canJoin,
   };
 }
 
 function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
+
 
 chrome.runtime.sendMessage({ action: "contentLoad" }, enableSpecifiedExtension);
