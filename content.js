@@ -34,17 +34,16 @@ function enableSpecifiedExtension(response) {
 
 function handleOpenWindow(openWindow) {
   openWindow.addEventListener('load', () => {
-    const joinable = getJoinButtons(openWindow.document);
-
-    if (!joinable.canJoin) {
+    if (!canJoin(openWindow.document)) {
       openWindow.close();
       return;
     }
 
-    console.log("joinable battle found!");
+    console.log("joinable -free- battle found!");
 
-    const specifiedNumber = getRandom(joinable.joinButtons.length);
-    const button = joinable.joinButtons[specifiedNumber];
+    const buttons = openWindow.document.querySelectorAll(".empty-ctn");
+    const specifiedNumber = getRandom(buttons.length);
+    const button = buttons[specifiedNumber];
 
     clickButton(button);
   });
@@ -70,20 +69,11 @@ function clickButton(theButton) {
   simulateMouseEvent(theButton, "click", coordX, coordY)
 }
 
-function getJoinButtons(document) {
-  const joinButtons = document.querySelectorAll(".empty-ctn");
-
+function canJoin(document) {
   const nullableGamePrice = document.querySelector(".game-price") 
-  const canJoin = nullableGamePrice !== null // it's not great but will help.
+  return nullableGamePrice !== null // it's not great but will help.
     ? nullableGamePrice.getElementsByTagName("span")[0].innerText === 'Free'
     : false;
-  
-  console.log(`is it free : ${canJoin}`)
-
-  return {
-    joinButtons,
-    canJoin,
-  };
 }
 
 function getRandom(max) {
