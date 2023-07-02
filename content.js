@@ -50,8 +50,12 @@ function handleOpenWindow(openWindow) {
 }
 
 // Special thanks to https://stackoverflow.com/questions/55059006/simulate-a-real-human-mouse-click-in-pure-javascript#comment131936413_55068681
-function simulateMouseEvent(element, eventName, coordX, coordY) {
-  element.dispatchEvent(new MouseEvent(eventName, {
+function clickButton(theButton) {
+  var box = theButton.getBoundingClientRect(),
+  coordX = box.left + (box.right - box.left) / 2,
+  coordY = box.top + (box.bottom - box.top) / 2;
+
+  theButton.dispatchEvent(new MouseEvent("click", {
     view: window,
     bubbles: true,
     cancelable: true,
@@ -59,14 +63,6 @@ function simulateMouseEvent(element, eventName, coordX, coordY) {
     clientY: coordY,
     button: 0
   }));
-}
-
-function clickButton(theButton) {
-  var box = theButton.getBoundingClientRect(),
-  coordX = box.left + (box.right - box.left) / 2,
-  coordY = box.top + (box.bottom - box.top) / 2;
-
-  simulateMouseEvent(theButton, "click", coordX, coordY)
 }
 
 function canJoin(document) {
