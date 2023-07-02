@@ -4,7 +4,7 @@ function joinBattle() {
   const nodes = document.querySelectorAll(".chat-message");
   const lastNode = nodes[nodes.length - 1];
   const lastMessage = lastNode.querySelector(".message-content");
-  const messageToken = lastMessage.querySelector(".message-token");
+  const messageToken = lastMessage.querySelector(".message-token, .href");
 
   if (messageToken !== null) {
     const redirectLink = messageToken.href;
