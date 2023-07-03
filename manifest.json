@@ -3,7 +3,7 @@
   "name": "BanditChamp",
   "version": "1.0",
   "description": "Helps you to open crate battles in bandit.camp",
-  "permissions": [],
+  "permissions": ["storage"],
   "host_permissions": ["https://bandit.camp/"],
   "content_scripts": [
     {

@@ -1,26 +1,21 @@
-var lastOpenedLink = "";
+const battles = [ ];
 
-function joinBattle() {
-  const nodes = document.querySelectorAll(".chat-message");
+async function joinBattle() {
+  const nodes = document.querySelectorAll(".message-token, .href");
   const lastNode = nodes[nodes.length - 1];
-  const lastMessage = lastNode.querySelector(".message-content");
-  const messageToken = lastMessage.querySelector(".message-token, .href");
+  const redirectLink = lastNode.href;
 
-  if (messageToken !== null) {
-    const redirectLink = messageToken.href;
-
-    if (redirectLink !== undefined && redirectLink.includes("crate-battles") && redirectLink !== lastOpenedLink) {
-      const openWindow = window.open(redirectLink);
-			if (openWindow) { 
-				lastOpenedLink = redirectLink;
-			}
-      else {
-        alert("disable your popup & redirect blocker or you will be sad :(");
-        return;
-      }
-
-      handleOpenWindow(openWindow);
+  if (redirectLink !== undefined && redirectLink.includes("crate-battles") && !battles.includes(redirectLink)) {
+    const openWindow = window.open(redirectLink);
+		if (openWindow) { 
+			battles.push(redirectLink);
+		}
+    else {
+      alert("disable your popup & redirect blocker or you will be sad :(");
+      return;
     }
+
+    handleOpenWindow(openWindow);
   }
 }
 
@@ -33,19 +28,37 @@ function enableSpecifiedExtension(response) {
 }
 
 function handleOpenWindow(openWindow) {
-  openWindow.addEventListener('load', () => {
-    if (!canJoin(openWindow.document)) {
+  openWindow.addEventListener('load', async () => {
+    let state;
+    if (canJoin(openWindow.document)) {
+      console.log("joinable -free- battle found!");
+
+      const buttons = openWindow.document.querySelectorAll(".empty-ctn");
+      const specifiedNumber = getRandom(buttons.length);
+      const button = buttons[specifiedNumber];
+  
+      clickButton(button);
+      state = 'JOINED';
+    }
+    else {
       openWindow.close();
-      return;
+      state = 'NOT_FREE'
     }
 
-    console.log("joinable -free- battle found!");
+    await appendValue(openWindow.location, state);
+  });
+}
 
-    const buttons = openWindow.document.querySelectorAll(".empty-ctn");
-    const specifiedNumber = getRandom(buttons.length);
-    const button = buttons[specifiedNumber];
+async function appendValue(url, state) {
+  await chrome.storage.local.get(['battles'], function(result) {
+    let entries = result.battles;
+    if (!entries) {
+      entries = { };
+    };
 
-    clickButton(button);
+    entries[url] = state;
+
+    chrome.storage.local.set({ 'battles': entries });
   });
 }
 
@@ -75,6 +88,5 @@ function canJoin(document) {
 function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
-
 
 chrome.runtime.sendMessage({ action: "contentLoad" }, enableSpecifiedExtension);
