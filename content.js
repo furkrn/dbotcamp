@@ -1,6 +1,6 @@
 const battles = [ ];
 
-async function joinBattle() {
+function joinBattle() {
   const nodes = document.querySelectorAll(".message-token, .href");
   const lastNode = nodes[nodes.length - 1];
   const redirectLink = lastNode.href;
