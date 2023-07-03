@@ -1,14 +1,14 @@
-var lastOpenedLink = "";
+const battles = [ ];
 
 function joinBattle() {
   const nodes = document.querySelectorAll(".message-token, .href");
   const lastNode = nodes[nodes.length - 1];
   const redirectLink = lastNode.href;
 
-  if (redirectLink !== undefined && redirectLink.includes("crate-battles") && redirectLink !== lastOpenedLink) {
+  if (redirectLink !== undefined && redirectLink.includes("crate-battles") && !battles.includes(redirectLink)) {
     const openWindow = window.open(redirectLink);
 		if (openWindow) { 
-			lastOpenedLink = redirectLink;
+			battles.push(redirectLink);
 		}
     else {
       alert("disable your popup & redirect blocker or you will be sad :(");
