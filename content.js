@@ -1,6 +1,6 @@
 const battles = [ ];
 
-function joinBattle() {
+async function joinBattle() {
   const nodes = document.querySelectorAll(".message-token, .href");
   const lastNode = nodes[nodes.length - 1];
   const redirectLink = lastNode.href;
@@ -28,19 +28,37 @@ function enableSpecifiedExtension(response) {
 }
 
 function handleOpenWindow(openWindow) {
-  openWindow.addEventListener('load', () => {
-    if (!canJoin(openWindow.document)) {
+  openWindow.addEventListener('load', async () => {
+    let state;
+    if (canJoin(openWindow.document)) {
+      console.log("joinable -free- battle found!");
+
+      const buttons = openWindow.document.querySelectorAll(".empty-ctn");
+      const specifiedNumber = getRandom(buttons.length);
+      const button = buttons[specifiedNumber];
+  
+      clickButton(button);
+      state = 'JOINED';
+    }
+    else {
       openWindow.close();
-      return;
+      state = 'NOT_FREE'
     }
 
-    console.log("joinable -free- battle found!");
+    await appendValue(openWindow.location, state);
+  });
+}
 
-    const buttons = openWindow.document.querySelectorAll(".empty-ctn");
-    const specifiedNumber = getRandom(buttons.length);
-    const button = buttons[specifiedNumber];
+async function appendValue(url, state) {
+  await chrome.storage.local.get(['battles'], function(result) {
+    let entries = result.battles;
+    if (!entries) {
+      entries = { };
+    };
 
-    clickButton(button);
+    entries[url] = state;
+
+    chrome.storage.local.set({ 'battles': entries });
   });
 }
 
