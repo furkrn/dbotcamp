@@ -1,26 +1,21 @@
 var lastOpenedLink = "";
 
 function joinBattle() {
-  const nodes = document.querySelectorAll(".chat-message");
+  const nodes = document.querySelectorAll(".message-token, .href");
   const lastNode = nodes[nodes.length - 1];
-  const lastMessage = lastNode.querySelector(".message-content");
-  const messageToken = lastMessage.querySelector(".message-token, .href");
+  const redirectLink = lastNode.href;
 
-  if (messageToken !== null) {
-    const redirectLink = messageToken.href;
-
-    if (redirectLink !== undefined && redirectLink.includes("crate-battles") && redirectLink !== lastOpenedLink) {
-      const openWindow = window.open(redirectLink);
-			if (openWindow) { 
-				lastOpenedLink = redirectLink;
-			}
-      else {
-        alert("disable your popup & redirect blocker or you will be sad :(");
-        return;
-      }
-
-      handleOpenWindow(openWindow);
+  if (redirectLink !== undefined && redirectLink.includes("crate-battles") && redirectLink !== lastOpenedLink) {
+    const openWindow = window.open(redirectLink);
+		if (openWindow) { 
+			lastOpenedLink = redirectLink;
+		}
+    else {
+      alert("disable your popup & redirect blocker or you will be sad :(");
+      return;
     }
+
+    handleOpenWindow(openWindow);
   }
 }
 
@@ -75,6 +70,5 @@ function canJoin(document) {
 function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
-
 
 chrome.runtime.sendMessage({ action: "contentLoad" }, enableSpecifiedExtension);
