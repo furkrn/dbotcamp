@@ -5,17 +5,17 @@ function onClicked(tab){
   if (extensionDisabled) {
     icons = {
         path:{
-      16: "icons/icon_disabled_16.png",
-      48: "icons/icon_disabled_48.png",
-      128: "icons/icon_disabled_128.png"
+      16: "assets/icons/disabled/icon_16.png",
+      48: "assets/icons/disabled/icon_48.png",
+      128: "assets/icons/disabled/icon_128.png"
     }};
   }
   else {
     icons = {
         path: {
-      16: "icons/icon_16.png",
-      48: "icons/icon_48.png",
-      128: "icons/icon_128.png"
+      16: "assets/icons/active/icon_16.png",
+      48: "assets/icons/active/icon_48.png",
+      128: "assets/icons/active/icon_128.png"
     }};
   }
   

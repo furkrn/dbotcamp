@@ -22,16 +22,16 @@
   "action": {
 	"default_title": "Click for enabling and disabling.",
     	"default_icon": {
-    		"16": "icons/icon_16.png",
-    		"48": "icons/icon_48.png",
-    		"128": "icons/icon_128.png"
+    		"16": "assets/icons/active/icon_16.png",
+    		"48": "assets/icons/active/icon_48.png",
+    		"128": "assets/icons/active/icon_128.png"
     }
     
   },
   "icons": {
-    "16": "icons/icon_16.png",
-    "48": "icons/icon_48.png",
-    "128": "icons/icon_128.png"
+    "16": "assets/icons/active/icon_16.png",
+    "48": "assets/icons/active/icon_48.png",
+    "128": "assets/icons/active/icon_128.png"
   }
   
 }
