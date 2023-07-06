@@ -3,7 +3,7 @@
   "name": "BanditChamp",
   "version": "1.0",
   "description": "Helps you to open crate battles in bandit.camp",
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "host_permissions": ["https://bandit.camp/"],
   "content_scripts": [
     {
@@ -16,10 +16,12 @@
     }
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
 
   "action": {
+  "default_popup":"popup/popup.html",
 	"default_title": "Click for enabling and disabling.",
     	"default_icon": {
     		"16": "assets/icons/active/icon_16.png",

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>dbotcamp management center</title>
+        <link rel="stylesheet" href="./popup.css"/>
+    </head>
+    <body>
+        <div class="group bigbox">
+            <label class="logo">BanditChamp</label>
+        </div>
+        <div>
+            <div class="bigbutton disabled shadowed" id="subscribe">Subscribe</div>
+            <label id="subscribe state">Not Implemented Yet</label>
+        </div>
+        <div>
+            <div class="bigbutton primary hovered shadowed" id="openbandit">Open BanditCamp</div>
+        </div>
+        <div>
+            <div class="bigbutton primary hovered shadowed" id="disableEnableButton">Disable / Enable</div>
+            <div class="bigbutton primary hovered shadowed" id="disableAllButton">Disable All</div>
+            <div class="bigbutton primary hovered shadowed" id="enableAllButton">Enable All</div>
+        </div>
+        <div class="group">
+            <input hidden class="check" type="checkbox" id="includeFree">
+            <label hidden>Only free</label>
+        </div>
+        <div class="group">
+            <input hidden class="checkbox" type="checkbox" id="includePay"/>
+            <label hidden>Include paid battles</label>
+        </div>
+        <div class="paidRanges">
+            <span hidden>Min:</span>
+            <label hidden id="payminlabel"></label>
+            <input hidden class="range" type="range" id="payminrange"/>
+        </div>
+        <div class="paidRanges">
+            <span hidden>Max:</span>
+            <label hidden id="paymaxlabel"></label>
+            <input hidden class="range" type="range" id="paymaxrange"/>
+        </div>
+        <div>
+            <span hidden>Interval:</span>
+            <label hidden id="intervallabel"></label>
+            <input hidden class="range" type="range" id="interval"/>
+        </div>
+        <div>
+            <label hidden id="savelabel">save changes</label>
+        </div>
+        <div class="group">
+            <div hidden class="bigbutton secondary hovered shadowed" id="history">History</div>
+            <div hidden class="bigbutton secondary hovered shadowed" id="reset">Reset</div>
+        </div>
+        <div class="group">
+            <label>Don't care about the UI, care about the pay ;)</label>
+        </div>
+        <script type="module" src="./popup.js"></script>
+    </body>
+</html>
