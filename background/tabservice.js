@@ -13,9 +13,7 @@ function ondisableEnableTab(response) {
         return;
     }
 
-    console.log("aaa")
     const id = response.tabId;
-    console.log(id);
     if (!pageStatuses.has(id)) {
         return;
     }
