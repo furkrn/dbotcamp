@@ -1,30 +1,33 @@
 import { setIcon, activeState, disabledState, unknownState } from '../utils/icons.js';
 import { saveChanges, storage } from '../utils/storage.js';
 
-const pageStatuses = new Map();
-
 function setAllDisabledState(disabled) {
     storage.disabled = disabled;
     saveChanges();
 }
 
-function ondisableEnableTab(response) {
+async function ondisableEnableTab(response) {
     if (response.action !== "disableEnableState") {
         return;
     }
 
     const id = response.tabId;
-    if (!pageStatuses.has(id)) {
-        return;
-    }
-
-    const pageStatus = pageStatuses.get(id);
-    pageStatus.disabled = !pageStatus.disabled;
-
-    chrome.tabs.reload(id);
+    console.log(id);
+    await setSessionPages(function (pagesMap) {
+        if (!(id in pagesMap)) {
+            return false;
+        }
+    
+        console.log('âaaa');
+        const pageStatus = pagesMap[id];
+        pageStatus.disabled = !pageStatus.disabled;
+    
+        chrome.tabs.reload(id);
+        return true;
+    });
 }
 
-function setAll(response) {
+async function setAll(response) {
     let disabled;
     switch (response.action) {
         case "disableAll":
@@ -37,60 +40,84 @@ function setAll(response) {
             return;
     };
 
-    for (const [tabId, pageStatus] of pageStatuses.entries())
-    {
-        pageStatus.disabled = disabled;
-        chrome.tabs.reload(tabId);
-    }
+    await setSessionPages(function (pagesMap) {
+        for (const [id, pageStatus] of Object.entries(pagesMap))
+        {
+            console.log(`${id} ${pageStatus}`);
+            pageStatus.disabled = disabled;
+    
+            chrome.tabs.reload(pageStatus.id);
+        }
+
+        return true;
+    });
 }
 
-
-function onContentLoad(response, sender, sendResponse) {
+async function onContentLoad(response, sender, sendResponse) {
     if (response.action !== "contentLoad") {
         return;
     }
 
-    const id = sender.tab.id;
-    if (!pageStatuses.has(id)) {
-        pageStatuses.set(id, {
-            disabled: false,
-        });
-    }
-
-    console.log(id);
-
-    const pageState = pageStatuses.get(id);
-    const extensionDisabled = pageState.disabled;
-
-    console.log(pageState);
-    const iconState = extensionDisabled ? disabledState : activeState;
-    setIcon(iconState);
-
-    sendResponse({ extensionDisabled });
-}
-
-function onPageRemove(tabId, _removeInfo) {
-    if (pageStatuses.has(tabId)) {
-
-        if (pageStatuses.size === 1) {
-            const state = pageStatuses.get(tabId);
-            setAllDisabledState(state.disabled);
+    const tabId = sender.tab.id;
+    await setSessionPages(function (pagesMap) {
+        if (!(tabId in pagesMap)) {
+            pagesMap[tabId] = { disabled: false, id: tabId };
         }
-        pageStatuses.delete(tabId);
-    }
+    
+        console.log(tabId);
+    
+        const pageState = pagesMap[tabId];
+        const extensionDisabled = pageState.disabled;
+    
+        console.log(pageState);
+        const iconState = extensionDisabled ? disabledState : activeState;
+        setIcon(iconState);
+    
+        sendResponse({ extensionDisabled });
+        return true;
+    });
 }
 
-function onPageSwitch(tab) {
-    const id = tab.tabId;
-    if (pageStatuses.has(id)) {
-        const pageStatus = pageStatuses.get(id);
-        const iconState = pageStatus.disabled ? disabledState : activeState;
+async function onPageRemove(tabId, _removeInfo) {
+    await setSessionPages(function (pagesMap) {
+        if (tabId in pagesMap) {
+            if (pagesMap.size === 1) {
+                const state = pagesMap[tabId];
+                setAllDisabledState(state.disabled);
+            }
+            delete pagesMap[tabId];
+            return true;
+        }
+    });
+}
 
-        setIcon(iconState)
-    }
-    else {
-        setIcon(unknownState);
-    }
+async function onPageSwitch(tab) {
+    await setSessionPages(function (pagesMap) {
+        const id = tab.tabId;
+        if (id in pagesMap) {
+            const iconState = pagesMap[id].disabled ? disabledState : activeState;
+
+            setIcon(iconState)
+        }
+        else {
+            setIcon(unknownState);
+        }
+        return false;
+    });
+}
+
+async function setSessionPages(pageSetterFn) {
+    await chrome.storage.local.get(['pages'], function(result) {
+        let pagesMap = result.pages;
+        if (!pagesMap) {
+            pagesMap = { };
+        }
+
+        const fnResult = pageSetterFn(pagesMap);
+        if (fnResult !== undefined && fnResult) {
+            chrome.storage.local.set({ pages: pagesMap });
+        }
+    });
 }
 
 chrome.runtime.onMessage.addListener(onContentLoad);
@@ -102,3 +129,4 @@ chrome.runtime.onConnect.addListener(function (port) {
 })
 chrome.tabs.onActivated.addListener(onPageSwitch);
 chrome.tabs.onRemoved.addListener(onPageRemove);
+chrome.runtime.onStartup.addListener(() => chrome.storage.local.set({ pages: { }}));
