@@ -21,34 +21,43 @@
             <div class="bigbutton primary hovered shadowed" id="enableAllButton">Enable All</div>
         </div>
         <div class="group">
-            <input hidden class="check" type="checkbox" id="includeFree">
-            <label hidden>Only free</label>
+            <input class="check" type="checkbox" id="includeFree">
+            <label>Only free</label>
         </div>
         <div class="group">
-            <input hidden class="checkbox" type="checkbox" id="includePay"/>
-            <label hidden>Include paid battles</label>
-        </div>
-        <div class="paidRanges">
-            <span hidden>Min:</span>
-            <label hidden id="payminlabel"></label>
-            <input hidden class="range" type="range" id="payminrange"/>
-        </div>
-        <div class="paidRanges">
-            <span hidden>Max:</span>
-            <label hidden id="paymaxlabel"></label>
-            <input hidden class="range" type="range" id="paymaxrange"/>
-        </div>
-        <div>
-            <span hidden>Interval:</span>
-            <label hidden id="intervallabel"></label>
-            <input hidden class="range" type="range" id="interval"/>
-        </div>
-        <div>
-            <label hidden id="savelabel">save changes</label>
+            <input class="checkbox" type="checkbox" id="includePay"/>
+            <label>Include paid battles</label>
         </div>
         <div class="group">
-            <div hidden class="bigbutton secondary hovered shadowed" id="history">History</div>
-            <div hidden class="bigbutton secondary hovered shadowed" id="reset">Reset</div>
+            <input class="checkbox" type="checkbox" id="Automatic Page Refresh"/>
+        </div>
+        <div hidden class="paidRanges">
+            <span>Min:</span>
+            <input class="numberbox" id="payminbox" type="number"/>
+            <input class="range" type="range" id="payminrange"/>
+        </div>
+        <div hidden class="paidRanges">
+            <span>Max:</span>
+            <input class="numberbox" id="paymaxbox" type="number"/>
+            <input class="range" type="range" id="paymaxrange"/>
+        </div>
+        <div>
+            <span>Interval:</span>
+            <input class="numberbox" id="intervalbox" type="number"/>
+            <label>ms</label>
+            <input class="range" type="range" id="interval" max="100000"/>
+        </div>
+        <div class="Tab">
+            <span>Tab refresh:</span>
+            <input class="numberbox" id="refreshbox" type="number"/>
+            <label>min(s)</label>
+        </div>
+        <div>
+            <label id="savelabel">save changes</label>
+        </div>
+        <div class="group">
+            <div class="bigbutton secondary hovered shadowed" id="history">History</div>
+            <div class="bigbutton secondary hovered shadowed" id="reset">Reset</div>
         </div>
         <div class="group">
             <label>Don't care about the UI, care about the pay ;)</label>

@@ -86,3 +86,12 @@ span {
     object-fit: fill;
     object-position: 50% 50%;
 }
+
+.numberbox {
+    width: 100px;
+    background-color: #192227;
+    color: whitesmoke;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: whitesmoke;
+}

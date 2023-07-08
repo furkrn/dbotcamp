@@ -7,12 +7,14 @@ const includePaidCheckBox = document.getElementById('includePay');
 const minBox = document.getElementById('payminbox');
 const maxBox = document.getElementById('paymaxbox');
 const intervalBox = document.getElementById('intervalbox');
+const refreshBox = document.getElementById('refreshbox');
 
 const paidRanges = document.querySelectorAll(".paidRanges");
 
 const minRange = document.getElementById('payminrange');
 const maxRange = document.getElementById('paymaxrange');
 const intervalRange = document.getElementById('interval');
+const refreshRange = document.getElementById('refresh');
 
 const saveLabel = document.getElementById('savelabel');
 
@@ -89,10 +91,12 @@ document.getElementById('enableAllButton').addEventListener('click', () => popop
 minRange.addEventListener('change', () => onValueChange(minBox, minRange, (val) => storage.minimumFee = val));
 maxRange.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) => storage.maximumFee = val));
 intervalRange.addEventListener('change', () => onValueChange(intervalBox, intervalRange, (val) => storage.interval = val));
+refreshRange.addEventListener('change', () => onValueChange(refreshBox, refreshRange, (val) => storage.refreshmin = val));
 
 minBox.addEventListener('change', () => onValueChange(minRange, minBox, (val) => storage.minimumFee = val));
 maxBox.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) => storage.maximumFee = val));
 intervalBox.addEventListener('change', () => onValueChange(intervalRange, intervalBox, (val) => storage.interval = val));
+refreshBox.addEventListener('change', () => onValueChange(refreshRange, refreshBox, (val) => storage.refreshmin = val));
 
 document.getElementById('reset').addEventListener('click', resetValues);
 document.getElementById('history').addEventListener('click', createHistory);
