@@ -29,7 +29,8 @@
             <label>Include paid battles</label>
         </div>
         <div class="group">
-            <input class="checkbox" type="checkbox" id="Automatic Page Refresh"/>
+            <input class="checkbox" type="checkbox" id="includeAutoRefresh"/>
+            <label>Auto refresh pages</label>
         </div>
         <div hidden class="paidRanges">
             <span>Min:</span>
@@ -47,7 +48,7 @@
             <label>ms</label>
             <input class="range" type="range" id="interval" max="100000"/>
         </div>
-        <div class="Tab">
+        <div hidden class="tabRefresh">
             <span>Tab refresh:</span>
             <input class="numberbox" id="refreshbox" type="number"/>
             <label>mins</label>

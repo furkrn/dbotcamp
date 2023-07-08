@@ -3,6 +3,7 @@ import { banditLink, popupPort } from "../utils/link.js";
 
 const includeFreeCheckBox = document.getElementById('includeFree');
 const includePaidCheckBox = document.getElementById('includePay');
+const includeAutoRefresh = document.getElementById('includeAutoRefresh');
 
 const minBox = document.getElementById('payminbox');
 const maxBox = document.getElementById('paymaxbox');
@@ -10,6 +11,7 @@ const intervalBox = document.getElementById('intervalbox');
 const refreshBox = document.getElementById('refreshbox');
 
 const paidRanges = document.querySelectorAll(".paidRanges");
+const tabRefresh = document.querySelector(".tabRefresh");
 
 const minRange = document.getElementById('payminrange');
 const maxRange = document.getElementById('paymaxrange');
@@ -69,6 +71,19 @@ function onfreeBattleCheck() {
     notImplemented();
 }
 
+function onAutoRefreshCheck() {
+    const checked = includeAutoRefresh.checked;
+    if (checked) {
+        tabRefresh.removeAttribute('hidden');
+    }
+    else {
+        tabRefresh.setAttribute('hidden', 'hidden');
+    }
+
+    storage.autorefresh = checked;
+    saveChanges();
+}
+
 async function loadPopupChanges() {
     await storageInit;
     const paid = storage.includePaid;
@@ -104,5 +119,6 @@ document.getElementById('history').addEventListener('click', createHistory);
 
 includePaidCheckBox.addEventListener('change', onPaidBattleCheck);
 includeFreeCheckBox.addEventListener('change', onfreeBattleCheck);
+includeAutoRefresh.addEventListener('change', onAutoRefreshCheck);
 
 loadPopupChanges();
