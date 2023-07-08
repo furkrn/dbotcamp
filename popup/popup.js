@@ -78,9 +78,10 @@ async function loadPopupChanges() {
     }
 
     includeFreeCheckBox.checked = storage.includeFree;
-    minBox.value = storage.minimumFee;
-    maxBox.value = storage.maximumFee;
-    intervalBox.value = storage.interval;
+    minBox.value = minRange.value = storage.minimumFee;
+    maxBox.value = maxRange.value = storage.maximumFee;
+    intervalBox.value = intervalRange.value = storage.interval;
+    refreshBox.value = refreshRange.value = storage.refreshmin;
 }
 
 document.getElementById('openbandit').addEventListener('click', () => window.open(banditLink));
