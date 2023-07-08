@@ -1,12 +1,12 @@
-import { saveChanges, storage } from "../utils/storage.js";
-import { banditLink } from "../utils/link.js";
+import { saveChanges, storage, storageInit } from "../utils/storage.js";
+import { banditLink, popupPort } from "../utils/link.js";
 
 const includeFreeCheckBox = document.getElementById('includeFree');
 const includePaidCheckBox = document.getElementById('includePay');
 
-const minLabel = document.getElementById('payminlabel');
-const maxLabel = document.getElementById('paymaxlabel');
-const intervalLabel = document.getElementById('intervallabel');
+const minBox = document.getElementById('payminbox');
+const maxBox = document.getElementById('paymaxbox');
+const intervalBox = document.getElementById('intervalbox');
 
 const paidRanges = document.querySelectorAll(".paidRanges");
 
@@ -16,23 +16,9 @@ const intervalRange = document.getElementById('interval');
 
 const saveLabel = document.getElementById('savelabel');
 
-const popopPort = chrome.runtime.connect({ name: "popupMessaging" });
+const popopPort = chrome.runtime.connect({ name: popupPort });
 
-function notImplemented() { alert('not Implemented'); }
-
-function setElementsState() {
-    includeFreeCheckBox.checked = storage.includeFree;
-    const includePaid = staoge.includePaid;
-    includePaidCheckBox.checked = includePaid;
-    if (includePaid) {
-        minRange.value = storage.minRange,
-        maxRange.value = storage.maxRange;
-    }
-
-    intervalRange.value = storage.intervalRange;
-    console.log(`Elements changed thanks to : ${result}`)
-    saveChanges();
-}
+function notImplemented() { alert('warning: this feature is not implemented yet, we are working on it fast as possible. this extension can be used for free battles only!'); }
 
 async function disableEnable() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true});
@@ -44,9 +30,11 @@ function createHistory() {
     notImplemented();
 }
 
-function onSliderChange(label, slider) {
-    label.innerText = slider.value;
-    notImplemented();
+function onValueChange(input, changed, storageSelect) {
+    const val = changed.value;
+    input.value = val;
+    storageSelect(val)
+    saveChanges();
 }
 
 function resetValues() {
@@ -55,6 +43,14 @@ function resetValues() {
 
 function onPaidBattleCheck() {
     const checked = includePaidCheckBox.checked;
+    showHidePaidRanges(checked);
+    storage.includePaid = checked;
+
+    saveChanges();
+    notImplemented();
+}
+
+function showHidePaidRanges(checked) {
     for (const paidRange of paidRanges) {
         if (checked) {
             paidRange.removeAttribute('hidden');
@@ -63,15 +59,26 @@ function onPaidBattleCheck() {
             paidRange.setAttribute('hidden', 'hidden');
         }
     }
-
-    storage.includePaid = checked;
-
-    saveChanges();
 }
 
 function onfreeBattleCheck() {
     storage.includeFree = includeFreeCheckBox.checked;
     saveChanges();
+    notImplemented();
+}
+
+async function loadPopupChanges() {
+    await storageInit;
+    const paid = storage.includePaid;
+    includePaidCheckBox.checked = paid;
+    if (paid) {
+        showHidePaidRanges(paid);
+    }
+
+    includeFreeCheckBox.checked = storage.includeFree;
+    minBox.value = storage.minimumFee;
+    maxBox.value = storage.maximumFee;
+    intervalBox.value = storage.interval;
 }
 
 document.getElementById('openbandit').addEventListener('click', () => window.open(banditLink));
@@ -79,9 +86,13 @@ document.getElementById('disableEnableButton').addEventListener('click', disable
 document.getElementById('disableAllButton').addEventListener('click', () => popopPort.postMessage({ action: "disableAll" }));
 document.getElementById('enableAllButton').addEventListener('click', () => popopPort.postMessage({ action: "enableAll" }));
 
-minRange.addEventListener('change', () => onSliderChange(minLabel, minRange));
-maxRange.addEventListener('change', () => onSliderChange(maxLabel, maxRange));
-intervalRange.addEventListener('change', () => onSliderChange(intervalLabel, intervalRange));
+minRange.addEventListener('change', () => onValueChange(minBox, minRange, (val) => storage.minimumFee = val));
+maxRange.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) => storage.maximumFee = val));
+intervalRange.addEventListener('change', () => onValueChange(intervalBox, intervalRange, (val) => storage.interval = val));
+
+minBox.addEventListener('change', () => onValueChange(minRange, minBox, (val) => storage.minimumFee = val));
+maxBox.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) => storage.maximumFee = val));
+intervalBox.addEventListener('change', () => onValueChange(intervalRange, intervalBox, (val) => storage.interval = val));
 
 document.getElementById('reset').addEventListener('click', resetValues);
 document.getElementById('history').addEventListener('click', createHistory);
@@ -89,4 +100,4 @@ document.getElementById('history').addEventListener('click', createHistory);
 includePaidCheckBox.addEventListener('change', onPaidBattleCheck);
 includeFreeCheckBox.addEventListener('change', onfreeBattleCheck);
 
-window.addEventListener('online', setElementsState);
+loadPopupChanges();

@@ -1,4 +1,5 @@
 import { setIcon, activeState, disabledState, unknownState } from '../utils/icons.js';
+import { popupPort } from '../utils/link.js';
 import { saveChanges, storage } from '../utils/storage.js';
 
 function setAllDisabledState(disabled) {
@@ -122,7 +123,7 @@ async function setSessionPages(pageSetterFn) {
 
 chrome.runtime.onMessage.addListener(onContentLoad);
 chrome.runtime.onConnect.addListener(function (port) {
-    if (port.name === "popupMessaging") {
+    if (port.name === popupPort) {
         port.onMessage.addListener(ondisableEnableTab);
         port.onMessage.addListener(setAll);
     }
