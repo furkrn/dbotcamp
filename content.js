@@ -89,4 +89,6 @@ function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
 
-chrome.runtime.sendMessage({ action: "contentLoad" }, enableSpecifiedExtension);
+const contentScriptPort = chrome.runtime.connect({ name: "contentPort" });
+contentScriptPort.postMessage({ action: "contentLoad" });
+contentScriptPort.onMessage.addListener(enableSpecifiedExtension);

@@ -1,5 +1,5 @@
 import { setIcon, activeState, disabledState, unknownState } from '../utils/icons.js';
-import { popupPort } from '../utils/link.js';
+import { popupPort, contentPort } from '../utils/link.js';
 import { saveChanges, storage } from '../utils/storage.js';
 
 function setAllDisabledState(disabled) {
@@ -53,24 +53,25 @@ async function setAll(response) {
     });
 }
 
-async function onContentLoad(response, sender, sendResponse) {
+async function onContentLoad(response, sendingPort) {
     if (response.action !== "contentLoad") {
         return;
     }
 
-    const tabId = sender.tab.id;
+    const tabId = sendingPort.sender.tab.id;
     await setSessionPages(function (pagesMap) {
         if (!(tabId in pagesMap)) {
             pagesMap[tabId] = { disabled: false, id: tabId };
         }
     
         const pageState = pagesMap[tabId];
-        const disabled = pageState.disabled;
+        console.log(pageState);
+        const extensionDisabled = pageState.disabled;
     
-        const iconState = disabled ? disabledState : activeState;
+        const iconState = extensionDisabled ? disabledState : activeState;
         setIcon(iconState);
-    
-        sendResponse({ extensionDisabled: disabled });
+        
+        sendingPort.postMessage({ extensionDisabled });        
         return true;
     });
 }
@@ -117,11 +118,14 @@ async function setSessionPages(pageSetterFn) {
     });
 }
 
-chrome.runtime.onMessage.addListener(onContentLoad);
+//chrome.runtime.onMessage.addListener(onContentLoad);
 chrome.runtime.onConnect.addListener(function (port) {
     if (port.name === popupPort) {
         port.onMessage.addListener(ondisableEnableTab);
         port.onMessage.addListener(setAll);
+    }
+    else if (port.name === contentPort) {
+        port.onMessage.addListener(onContentLoad);
     }
 })
 chrome.tabs.onActivated.addListener(onPageSwitch);
