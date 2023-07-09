@@ -22,8 +22,6 @@ const saveLabel = document.getElementById('savelabel');
 
 const popopPort = chrome.runtime.connect({ name: popupPort });
 
-function notImplemented() { alert('warning: this feature is not implemented yet, we are working on it fast as possible. this extension can be used for free battles only!'); }
-
 async function disableEnable() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true});
     const tabId = tab.id;
@@ -31,7 +29,7 @@ async function disableEnable() {
 }
 
 function createHistory() {
-    notImplemented();
+    alert('not implemented yet!');
 }
 
 function onValueChange(input, changed, storageSelect) {
@@ -41,8 +39,10 @@ function onValueChange(input, changed, storageSelect) {
     saveChanges();
 }
 
-function resetValues() {
-    notImplemented();
+function clearValues() {
+    storage.battles = { };
+    saveChanges();
+    saveLabel.textContent = "Cleared!"
 }
 
 function onPaidBattleCheck() {
@@ -51,7 +51,6 @@ function onPaidBattleCheck() {
     storage.includePaid = checked;
 
     saveChanges();
-    notImplemented();
 }
 
 function showHidePaidRanges(checked) {
@@ -68,20 +67,22 @@ function showHidePaidRanges(checked) {
 function onfreeBattleCheck() {
     storage.includeFree = includeFreeCheckBox.checked;
     saveChanges();
-    notImplemented();
 }
 
 function onAutoRefreshCheck() {
     const checked = includeAutoRefresh.checked;
+    showHideAutoRefreshElements(checked);
+    storage.autorefresh = checked;
+    saveChanges();
+}
+
+function showHideAutoRefreshElements(checked) {
     if (checked) {
         tabRefresh.removeAttribute('hidden');
     }
     else {
         tabRefresh.setAttribute('hidden', 'hidden');
     }
-
-    storage.autorefresh = checked;
-    saveChanges();
 }
 
 async function loadPopupChanges() {
@@ -90,6 +91,12 @@ async function loadPopupChanges() {
     includePaidCheckBox.checked = paid;
     if (paid) {
         showHidePaidRanges(paid);
+    }
+
+    const autorefresh = storage.autorefresh;
+    includeAutoRefresh.checked = autorefresh;
+    if (autorefresh) {
+        showHideAutoRefreshElements(autorefresh);
     }
 
     includeFreeCheckBox.checked = storage.includeFree;
@@ -114,7 +121,7 @@ maxBox.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) =>
 intervalBox.addEventListener('change', () => onValueChange(intervalRange, intervalBox, (val) => storage.interval = val));
 refreshBox.addEventListener('change', () => onValueChange(refreshRange, refreshBox, (val) => storage.refreshmin = val));
 
-document.getElementById('reset').addEventListener('click', resetValues);
+document.getElementById('reset').addEventListener('click', clearValues);
 document.getElementById('history').addEventListener('click', createHistory);
 
 includePaidCheckBox.addEventListener('change', onPaidBattleCheck);
