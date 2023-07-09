@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>dbotcamp management center</title>
+        <link rel="stylesheet" href="./popup.css"/>
+    </head>
+    <body>
+        <div class="group bigbox">
+            <label class="logo">BanditChamp</label>
+        </div>
+        <div>
+            <div class="bigbutton disabled shadowed" id="subscribe">Subscribe</div>
+            <label id="subscribe state">Not Implemented Yet</label>
+        </div>
+        <div>
+            <div class="bigbutton primary hovered shadowed" id="openbandit">Open BanditCamp</div>
+        </div>
+        <div>
+            <div class="bigbutton primary hovered shadowed" id="disableEnableButton">Disable / Enable</div>
+            <div class="bigbutton primary hovered shadowed" id="disableAllButton">Disable All</div>
+            <div class="bigbutton primary hovered shadowed" id="enableAllButton">Enable All</div>
+        </div>
+        <div class="group">
+            <input class="check" type="checkbox" id="includeFree">
+            <label>Only free</label>
+        </div>
+        <div class="group">
+            <input class="checkbox" type="checkbox" id="includePay"/>
+            <label>Include paid battles</label>
+        </div>
+        <div class="group">
+            <input class="checkbox" type="checkbox" id="includeAutoRefresh"/>
+            <label>Auto refresh pages</label>
+        </div>
+        <div hidden class="paidRanges">
+            <span>Min:</span>
+            <input class="numberbox" id="payminbox" type="number"/>
+            <input class="range" type="range" id="payminrange"/>
+        </div>
+        <div hidden class="paidRanges">
+            <span>Max:</span>
+            <input class="numberbox" id="paymaxbox" type="number"/>
+            <input class="range" type="range" id="paymaxrange"/>
+        </div>
+        <div>
+            <span>Interval:</span>
+            <input class="numberbox" id="intervalbox" type="number"/>
+            <label>ms</label>
+            <input class="range" type="range" id="interval" max="100000"/>
+        </div>
+        <div hidden class="tabRefresh">
+            <span>Auto Refresh on:</span>
+            <div>
+            <input class="numberbox" id="refreshbox" type="number" min="1"/>
+            <label>mins</label>
+            </div>
+            <input class="range" type="range" id="refresh" min="1"/>
+        </div>
+        <div>
+            <label id="savelabel">Do something??</label>
+        </div>
+        <div class="group">
+            <div class="bigbutton secondary hovered shadowed" id="history">History</div>
+            <div class="bigbutton secondary hovered shadowed" id="reset">Clear</div>
+        </div>
+        <div class="group">
+            <label>Don't care about the UI, care about the pay ;)</label>
+        </div>
+        <script type="module" src="./popup.js"></script>
+    </body>
+</html>

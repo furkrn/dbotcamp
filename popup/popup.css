@@ -1,0 +1,97 @@
+body {
+    height: fit-content;
+    width: fit-content;
+    background-color: #192227;
+    color: whitesmoke;
+}
+
+.bigbox {
+    display: flex;
+    background-color: #550325;
+    color: #B90033;
+    height: 128px;
+    width: 128px;
+    text-align: center;
+    position: fixed;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 1px 1px 1px 1px;
+    position: relative;
+}
+
+.logo {
+    text-align: center;
+    object-fit: cover;
+    margin: auto;
+    object-position: center;
+
+}
+
+.group {
+    display: flex;
+}
+
+span {
+    padding: 3px;
+    text-align: left;
+}
+
+.bigbutton {
+    text-align: center;
+    margin: 5px 5px 5px 3px;
+    padding: 10px 5px 3px;
+    width: px;
+    height: 30px;
+    color: black;
+}
+
+.disabled {
+    background-color: grey;
+}
+
+.primary {
+    background-color: rgb(126, 199, 17);
+}
+
+.crit {
+    background-color: red;
+    color: whitesmoke;
+}
+
+.special {
+    background-color: rgb(224, 124, 255);
+}
+
+.secondary {
+    background-color: #d3ac00;
+}
+
+.hovered:hover {
+    background-color: #b8b8b8;
+}
+
+.hovered:active {
+    background-color: #919090;
+}
+
+.shadowed {
+    box-shadow: inset -1px -1px 1px black, inset 1px 1px 1px black;
+    inset-inline: 3px;
+}
+
+.fill {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    object-position: 50% 50%;
+}
+
+.numberbox {
+    width: 50px;
+    background-color: #192227;
+    color: whitesmoke;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: whitesmoke;
+}
