@@ -1,5 +1,5 @@
 import "./background/tabservice.js";
-import "./background/afkservice.js";
+import "./background/pagerefreshservice.js";
 import { storageInit } from "./utils/storage.js";
 
-(async() => await storageInit);
+chrome.runtime.onStartup.addListener(async() => storageInit);
