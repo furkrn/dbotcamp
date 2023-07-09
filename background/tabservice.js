@@ -19,7 +19,6 @@ async function ondisableEnableTab(response) {
             return false;
         }
     
-        console.log('âaaa');
         const pageStatus = pagesMap[id];
         pageStatus.disabled = !pageStatus.disabled;
     
@@ -65,16 +64,13 @@ async function onContentLoad(response, sender, sendResponse) {
             pagesMap[tabId] = { disabled: false, id: tabId };
         }
     
-        console.log(tabId);
-    
         const pageState = pagesMap[tabId];
-        const extensionDisabled = pageState.disabled;
+        const disabled = pageState.disabled;
     
-        console.log(pageState);
-        const iconState = extensionDisabled ? disabledState : activeState;
+        const iconState = disabled ? disabledState : activeState;
         setIcon(iconState);
     
-        sendResponse({ extensionDisabled });
+        sendResponse({ extensionDisabled: disabled });
         return true;
     });
 }
