@@ -105,7 +105,7 @@ async function onPageSwitch(tab) {
 }
 
 async function setSessionPages(pageSetterFn) {
-    await chrome.storage.local.get(['pages'], function(result) {
+    await chrome.storage.session.get(['pages'], function(result) {
         let pagesMap = result.pages;
         if (!pagesMap) {
             pagesMap = { };
@@ -113,7 +113,7 @@ async function setSessionPages(pageSetterFn) {
 
         const fnResult = pageSetterFn(pagesMap);
         if (fnResult !== undefined && fnResult) {
-            chrome.storage.local.set({ pages: pagesMap });
+            chrome.storage.session.set({ pages: pagesMap });
         }
     });
 }
@@ -130,4 +130,4 @@ chrome.runtime.onConnect.addListener(function (port) {
 })
 chrome.tabs.onActivated.addListener(onPageSwitch);
 chrome.tabs.onRemoved.addListener(onPageRemove);
-chrome.runtime.onStartup.addListener(() => chrome.storage.local.set({ pages: { }}));
+chrome.runtime.onStartup.addListener(() => chrome.storage.session.set({ pages: { }}));
