@@ -59,6 +59,9 @@ async function onContentLoad(response, sendingPort) {
     }
 
     const tabId = sendingPort.sender.tab.id;
+    const result = await chrome.storage.local.get([ 'interval' ]);
+    const interval = result.interval;
+    
     await setSessionPages(function (pagesMap) {
         if (!(tabId in pagesMap)) {
             pagesMap[tabId] = { disabled: false, id: tabId };
@@ -71,7 +74,7 @@ async function onContentLoad(response, sendingPort) {
         const iconState = extensionDisabled ? disabledState : activeState;
         setIcon(iconState);
         
-        sendingPort.postMessage({ extensionDisabled, action: 'sendState' });        
+        sendingPort.postMessage({ extensionDisabled, action: 'sendState', interval });        
         return true;
     });
 }
