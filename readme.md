@@ -7,7 +7,15 @@ We built this extension for fun. REALLY.
 
 ### Installation
 ### Easy step:
-- Please refer to [releases page](https://github.com/furkrn/dbotcamp/releases) and click `dbdotcamp.crx` then you will be prompted for installation process.
+
+### Google Chrome:
+- Download it from [here](https://github.com/furkrn/dbotcamp/releases)
+- For those who use Google Chrome on Windows, run `preinstall.reg` and allow regedit to make changes. Make sure to restart Chrome after
+- Drag `dbdotcamp.crx` to your Chrome, you will be prompted for installation.
+
+### Other browsers:
+- Download `dbdotcamp.crx` from [here](https://github.com/furkrn/dbotcamp/releases), you will be prompted for the install.
+
 ### For Good ol' manual installation:
 - Download this repository with [by clicking to here](https://github.com/furkrn/dbotcamp/archive/refs/heads/master.zip)
 - Extract the zip.
