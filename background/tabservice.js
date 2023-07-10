@@ -7,7 +7,7 @@ function setAllDisabledState(disabled) {
     saveChanges();
 }
 
-async function ondisableEnableTab(response) {
+async function ondisableEnableTab(response, sendingPort) {
     if (response.action !== "disableEnableState") {
         return;
     }
@@ -23,11 +23,12 @@ async function ondisableEnableTab(response) {
         pageStatus.disabled = !pageStatus.disabled;
     
         chrome.tabs.reload(id);
+        respondWithState(sendingPort, pageStatus.disabled);
         return true;
     });
 }
 
-async function setAll(response) {
+async function setAll(response, sendingPort) {
     let disabled;
     switch (response.action) {
         case "disableAll":
@@ -49,6 +50,7 @@ async function setAll(response) {
             chrome.tabs.reload(pageStatus.id);
         }
 
+        respondWithState(sendingPort, disabled);
         return true;
     });
 }
@@ -105,6 +107,10 @@ async function onPageSwitch(tab) {
         }
         return false;
     });
+}
+
+function respondWithState(sendingPort, pageState) {
+    sendingPort.postMessage({ action: 'respondWithState', pageState });
 }
 
 async function setSessionPages(pageSetterFn) {

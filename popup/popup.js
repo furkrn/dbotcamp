@@ -1,5 +1,7 @@
 import { saveChanges, storage, storageInit } from "../utils/storage.js";
-import { banditLink, popupPort } from "../utils/link.js";
+import { banditLink, popupPort as port} from "../utils/link.js";
+
+const disableEnableButton = document.getElementById('disableEnableButton');
 
 const includeAutoRefresh = document.getElementById('includeAutoRefresh');
 const includeAutoSwitch = document.getElementById('includeAutoSwitch');
@@ -17,12 +19,23 @@ const switchRange = document.getElementById('switch');
 
 const saveLabel = document.getElementById('savelabel');
 
-const popopPort = chrome.runtime.connect({ name: popupPort });
+const popupPort = chrome.runtime.connect({ name: port });
 
 async function disableEnable() {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true});
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const tabId = tab.id;
-    popopPort.postMessage({ tabId, action: "disableEnableState" });
+    popupPort.postMessage({ tabId, action: "disableEnableState" });
+}
+
+function setDisableEnable(response) {
+    if (response.action !== 'respondWithState') {
+        return;
+    }
+
+    disableEnableButton.classList.remove('primary', 'crit');
+    const state = response.pageState;
+    const classToAdd = state ? 'crit' : 'primary';
+    disableEnableButton.classList.add(classToAdd);    
 }
 
 function createHistory() {
@@ -67,6 +80,24 @@ function showHideElements(element, checked) {
 
 async function loadPopupChanges() {
     await storageInit;
+    const pageResult = await chrome.storage.session.get([ 'pages' ]);
+    const pages = pageResult?.pages;
+    console.log(pages);
+    if (pages) {
+        const [tab] = await chrome.tabs.query({ active:true, currentWindow:true });
+        const id = tab.id;
+        if (pages.hasOwnProperty(id)) {
+            const page = pages[id];
+            const classToAdd = page.disabled ? 'crit' : 'primary';
+            disableEnableButton.classList.add(classToAdd, 'hovered');
+        }
+        else {
+            disableEnableButton.classList.add('disabled');
+        }
+    }
+    else {
+        disableEnableButton.classList.add('disabled');
+    }
 
     const autorefresh = storage.autorefresh;
     includeAutoRefresh.checked = autorefresh;
@@ -86,9 +117,9 @@ async function loadPopupChanges() {
 }
 
 document.getElementById('openbandit').addEventListener('click', () => window.open(banditLink));
-document.getElementById('disableEnableButton').addEventListener('click', disableEnable);
-document.getElementById('disableAllButton').addEventListener('click', () => popopPort.postMessage({ action: "disableAll" }));
-document.getElementById('enableAllButton').addEventListener('click', () => popopPort.postMessage({ action: "enableAll" }));
+disableEnableButton.addEventListener('click', disableEnable);
+document.getElementById('disableAllButton').addEventListener('click', () => popupPort.postMessage({ action: "disableAll" }));
+document.getElementById('enableAllButton').addEventListener('click', () => popupPort.postMessage({ action: "enableAll" }));
 
 intervalRange.addEventListener('change', () => onValueChange(intervalBox, intervalRange, (val) => storage.interval = val));
 refreshRange.addEventListener('change', () => onValueChange(refreshBox, refreshRange, (val) => storage.refreshmin = val));
@@ -103,5 +134,7 @@ document.getElementById('history').addEventListener('click', createHistory);
 
 includeAutoRefresh.addEventListener('change', onAutoRefreshCheck);
 includeAutoSwitch.addEventListener('change', onAutoSwitchCheck);
+
+popupPort.onMessage.addListener(setDisableEnable);
 
 loadPopupChanges();
