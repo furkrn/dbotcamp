@@ -39,28 +39,24 @@ async function changeService(changes, area, serviceid, minutes, used, fn, getFn,
     }
 
     const values = await chrome.storage.session.get[ serviceid ];
-    const oldintervalid = getFn(values);
-    if (oldintervalid !== undefined) {
-        let intervalid = values[serviceid]
-        if (intervalid !== null) {
-            clearInterval(intervalid);
-        }
+    let intervalid = getFn(values);
+    if (intervalid !== null) {
+        clearInterval(intervalid);
     }
 
     const localValues = await chrome.storage.local.get([ minutes, used ]);
     const canBe = localValues[used];
     if (canBe) {
         const newInterval = localValues[minutes] * 60000;
-        oldintervalid = setInterval(fn, newInterval);
-        setFn(oldintervalid);
+        intervalid = setInterval(fn, newInterval);
+        setFn(intervalid);
     }
 }
 
 chrome.storage.onChanged.addListener(async (changes, area) => {
     await changeService(changes, area, 'refreshserviceid', 'refreshmin', 'autorefresh', refreshAllPages, getserviceid, setserviceid);
     function getserviceid(results) {
-        const intervalid = results?.refreshserviceid;
-        return intervalid ? null : intervalid; // ewww...
+        return results?.refreshserviceid;
     }
     function setserviceid(refreshserviceid) {
         chrome.storage.session.set({ refreshserviceid });
@@ -70,8 +66,7 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
 chrome.storage.onChanged.addListener(async (changes, area) => {
     await changeService(changes, area, 'switchserviceid', 'switchmin', 'autoswitch', switchPages, getserviceid, setserviceid);
     function getserviceid(results) {
-        const intervalid = results?.switchserviceid;
-        return intervalid ? null : intervalid; // another eww... well at least it's dry.
+        return results?.switchserviceid;
     }
     function setserviceid(switchserviceid) {
         chrome.storage.session.set({ switchserviceid });
