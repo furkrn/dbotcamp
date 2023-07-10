@@ -20,6 +20,9 @@ function joinBattle() {
 }
 
 function enableSpecifiedExtension(response) {
+  if (response.action !== "sendState") {
+    return;
+  }
   const disabled = response.extensionDisabled;
   console.log(`Extension disabled == ${disabled}`)
   if (!disabled) {

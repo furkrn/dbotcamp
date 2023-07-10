@@ -71,7 +71,7 @@ async function onContentLoad(response, sendingPort) {
         const iconState = extensionDisabled ? disabledState : activeState;
         setIcon(iconState);
         
-        sendingPort.postMessage({ extensionDisabled });        
+        sendingPort.postMessage({ extensionDisabled, action: 'sendState' });        
         return true;
     });
 }
