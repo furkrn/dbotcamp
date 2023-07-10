@@ -7,12 +7,11 @@ chrome.runtime.onStartup.addListener(async() => storageInit);
 chrome.runtime.onInstalled.addListener(() => {
    chrome.storage.local.set({
         autorefresh: true,
+        autoswitch: true,
         battles: { },
         includeFree: true,
-        includePaid: false,
         interval: 100,
-        maximumFee: 0,
-        minimumFee: 0,
         refreshmin: 10,
+        switchmin: 1,
    }); 
 });

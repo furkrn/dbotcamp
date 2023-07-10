@@ -21,16 +21,12 @@
             <div class="bigbutton primary hovered shadowed" id="enableAllButton">Enable All</div>
         </div>
         <div class="group">
-            <input class="check" type="checkbox" id="includeFree">
-            <label>Only free</label>
-        </div>
-        <div class="group">
-            <input class="checkbox" type="checkbox" id="includePay"/>
-            <label>Include paid battles</label>
-        </div>
-        <div class="group">
             <input class="checkbox" type="checkbox" id="includeAutoRefresh"/>
             <label>Auto refresh pages</label>
+        </div>
+        <div class="group">
+            <input class="checkbox" type="checkbox" id="includeAutoSwitch"/>
+            <label>Auto switch pages</label>
         </div>
         <div hidden class="paidRanges">
             <span>Min:</span>
@@ -55,6 +51,14 @@
             <label>mins</label>
             </div>
             <input class="range" type="range" id="refresh" min="1"/>
+        </div>
+        <div hidden class="tabSwitch">
+            <span>Auto Switch on:</span>
+            <div>
+            <input class="numberbox" id="switchBox" type="number" min="1"/>
+            <label>min</label>
+            </div>
+            <input class="range" type="range" id="switch" min="1"/>
         </div>
         <div>
             <label id="savelabel">Do something??</label>

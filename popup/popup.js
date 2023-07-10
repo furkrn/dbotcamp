@@ -1,22 +1,19 @@
 import { saveChanges, storage, storageInit } from "../utils/storage.js";
 import { banditLink, popupPort } from "../utils/link.js";
 
-const includeFreeCheckBox = document.getElementById('includeFree');
-const includePaidCheckBox = document.getElementById('includePay');
 const includeAutoRefresh = document.getElementById('includeAutoRefresh');
+const includeAutoSwitch = document.getElementById('includeAutoSwitch');
 
-const minBox = document.getElementById('payminbox');
-const maxBox = document.getElementById('paymaxbox');
 const intervalBox = document.getElementById('intervalbox');
 const refreshBox = document.getElementById('refreshbox');
+const switchBox = document.getElementById('switchBox');
 
-const paidRanges = document.querySelectorAll(".paidRanges");
 const tabRefresh = document.querySelector(".tabRefresh");
+const tabSwitch = document.querySelector(".tabSwitch");
 
-const minRange = document.getElementById('payminrange');
-const maxRange = document.getElementById('paymaxrange');
 const intervalRange = document.getElementById('interval');
 const refreshRange = document.getElementById('refresh');
+const switchRange = document.getElementById('switch');
 
 const saveLabel = document.getElementById('savelabel');
 
@@ -45,65 +42,47 @@ function clearValues() {
     saveLabel.textContent = "Cleared!"
 }
 
-function onPaidBattleCheck() {
-    const checked = includePaidCheckBox.checked;
-    showHidePaidRanges(checked);
-    storage.includePaid = checked;
-
-    saveChanges();
-}
-
-function showHidePaidRanges(checked) {
-    for (const paidRange of paidRanges) {
-        if (checked) {
-            paidRange.removeAttribute('hidden');
-        }
-        else {
-            paidRange.setAttribute('hidden', 'hidden');
-        }
-    }
-}
-
-function onfreeBattleCheck() {
-    storage.includeFree = includeFreeCheckBox.checked;
-    saveChanges();
-}
-
 function onAutoRefreshCheck() {
     const checked = includeAutoRefresh.checked;
-    showHideAutoRefreshElements(checked);
+    showHideElements(tabRefresh, checked);
     storage.autorefresh = checked;
     saveChanges();
 }
 
-function showHideAutoRefreshElements(checked) {
+function onAutoSwitchCheck() {
+    const checked = includeAutoSwitch.checked;
+    showHideElements(tabSwitch, checked);
+    storage.autoswitch = checked;
+    saveChanges();
+}
+
+function showHideElements(element, checked) {
     if (checked) {
-        tabRefresh.removeAttribute('hidden');
+        element.removeAttribute('hidden');
     }
     else {
-        tabRefresh.setAttribute('hidden', 'hidden');
+        element.setAttribute('hidden', 'hidden');
     }
 }
 
 async function loadPopupChanges() {
     await storageInit;
-    const paid = storage.includePaid;
-    includePaidCheckBox.checked = paid;
-    if (paid) {
-        showHidePaidRanges(paid);
-    }
 
     const autorefresh = storage.autorefresh;
     includeAutoRefresh.checked = autorefresh;
     if (autorefresh) {
-        showHideAutoRefreshElements(autorefresh);
+        showHideElements(tabRefresh, autorefresh);
     }
 
-    includeFreeCheckBox.checked = storage.includeFree;
-    minBox.value = minRange.value = storage.minimumFee;
-    maxBox.value = maxRange.value = storage.maximumFee;
+    const autoswitch = storage.autoswitch;
+    includeAutoSwitch.checked = autoswitch;
+    if (autoswitch) {
+        showHideElements(tabSwitch, autoswitch);
+    }
+
     intervalBox.value = intervalRange.value = storage.interval;
     refreshBox.value = refreshRange.value = storage.refreshmin;
+    switchBox.value = switchRange.value = storage.switchmin;
 }
 
 document.getElementById('openbandit').addEventListener('click', () => window.open(banditLink));
@@ -111,21 +90,18 @@ document.getElementById('disableEnableButton').addEventListener('click', disable
 document.getElementById('disableAllButton').addEventListener('click', () => popopPort.postMessage({ action: "disableAll" }));
 document.getElementById('enableAllButton').addEventListener('click', () => popopPort.postMessage({ action: "enableAll" }));
 
-minRange.addEventListener('change', () => onValueChange(minBox, minRange, (val) => storage.minimumFee = val));
-maxRange.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) => storage.maximumFee = val));
 intervalRange.addEventListener('change', () => onValueChange(intervalBox, intervalRange, (val) => storage.interval = val));
 refreshRange.addEventListener('change', () => onValueChange(refreshBox, refreshRange, (val) => storage.refreshmin = val));
+switchRange.addEventListener('change', () => onValueChange(switchBox, switchRange, (val) => storage.switchmin = val));
 
-minBox.addEventListener('change', () => onValueChange(minRange, minBox, (val) => storage.minimumFee = val));
-maxBox.addEventListener('change', () => onValueChange(maxBox, maxRange, (val) => storage.maximumFee = val));
 intervalBox.addEventListener('change', () => onValueChange(intervalRange, intervalBox, (val) => storage.interval = val));
 refreshBox.addEventListener('change', () => onValueChange(refreshRange, refreshBox, (val) => storage.refreshmin = val));
+switchBox.addEventListener('change', () => onValueChange(switchRange, switchBox, (val) => storage.switchmin = val));
 
 document.getElementById('reset').addEventListener('click', clearValues);
 document.getElementById('history').addEventListener('click', createHistory);
 
-includePaidCheckBox.addEventListener('change', onPaidBattleCheck);
-includeFreeCheckBox.addEventListener('change', onfreeBattleCheck);
 includeAutoRefresh.addEventListener('change', onAutoRefreshCheck);
+includeAutoSwitch.addEventListener('change', onAutoSwitchCheck);
 
 loadPopupChanges();
