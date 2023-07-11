@@ -1,4 +1,7 @@
 const battles = [ ];
+const contentScriptPort = chrome.runtime.connect({ name: "contentPort" });
+let disabled;
+let intervalId;
 
 function joinBattle() {
   const nodes = document.querySelectorAll(".message-token, .href");
@@ -20,11 +23,27 @@ function joinBattle() {
 }
 
 function enableSpecifiedExtension(response) {
-  const disabled = response.extensionDisabled;
-  console.log(`Extension disabled == ${disabled}`)
-  if (!disabled) {
-    setInterval(joinBattle, 100);
+  if (response.action !== "sendState") {
+    return;
   }
+
+  disabled = response.extensionDisabled;
+  console.log(`Extension disabled == ${disabled}`)
+
+  if (!disabled) {
+    const interval = response.interval;
+    setInterval(joinBattle, interval);
+  }
+}
+
+function setIntervalChange(response) {
+  if (response.action !== 'intervalChange') {
+    return;
+  }
+  console.log(response.interval);
+  console.log('Interval changed!')
+  clearInterval(intervalId);
+  intervalId = setInterval(joinBattle, response.interval);
 }
 
 function handleOpenWindow(openWindow) {
@@ -89,6 +108,10 @@ function getRandom(max) {
   return Math.floor(Math.random() * max);
 }
 
-const contentScriptPort = chrome.runtime.connect({ name: "contentPort" });
 contentScriptPort.postMessage({ action: "contentLoad" });
 contentScriptPort.onMessage.addListener(enableSpecifiedExtension);
+chrome.runtime.onConnect.addListener(port => {
+  if (port.name === "contentPort") {
+    port.onMessage.addListener(setIntervalChange);
+  }
+})

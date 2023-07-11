@@ -7,7 +7,7 @@ function setAllDisabledState(disabled) {
     saveChanges();
 }
 
-async function ondisableEnableTab(response) {
+async function ondisableEnableTab(response, sendingPort) {
     if (response.action !== "disableEnableState") {
         return;
     }
@@ -23,11 +23,12 @@ async function ondisableEnableTab(response) {
         pageStatus.disabled = !pageStatus.disabled;
     
         chrome.tabs.reload(id);
+        respondWithState(sendingPort, pageStatus.disabled);
         return true;
     });
 }
 
-async function setAll(response) {
+async function setAll(response, sendingPort) {
     let disabled;
     switch (response.action) {
         case "disableAll":
@@ -49,6 +50,7 @@ async function setAll(response) {
             chrome.tabs.reload(pageStatus.id);
         }
 
+        respondWithState(sendingPort, disabled);
         return true;
     });
 }
@@ -59,6 +61,9 @@ async function onContentLoad(response, sendingPort) {
     }
 
     const tabId = sendingPort.sender.tab.id;
+    const result = await chrome.storage.local.get([ 'interval' ]);
+    const interval = result.interval;
+    
     await setSessionPages(function (pagesMap) {
         if (!(tabId in pagesMap)) {
             pagesMap[tabId] = { disabled: false, id: tabId };
@@ -71,7 +76,7 @@ async function onContentLoad(response, sendingPort) {
         const iconState = extensionDisabled ? disabledState : activeState;
         setIcon(iconState);
         
-        sendingPort.postMessage({ extensionDisabled });        
+        sendingPort.postMessage({ extensionDisabled, action: 'sendState', interval });        
         return true;
     });
 }
@@ -102,6 +107,10 @@ async function onPageSwitch(tab) {
         }
         return false;
     });
+}
+
+function respondWithState(sendingPort, pageState) {
+    sendingPort.postMessage({ action: 'respondWithState', pageState });
 }
 
 async function setSessionPages(pageSetterFn) {
