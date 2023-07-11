@@ -33,7 +33,6 @@ function enableSpecifiedExtension(response) {
   if (!disabled) {
     const interval = response.interval;
     setInterval(joinBattle, interval);
-    contentScriptPort.onMessage.addListener(setInterval);
   }
 }
 
@@ -41,11 +40,10 @@ function setIntervalChange(response) {
   if (response.action !== 'intervalChange') {
     return;
   }
-
+  console.log(response.interval);
   console.log('Interval changed!')
   clearInterval(intervalId);
-  const interval = response.interval;
-  intervalId = setInterval(joinBattle, interval);
+  intervalId = setInterval(joinBattle, response.interval);
 }
 
 function handleOpenWindow(openWindow) {
@@ -112,3 +110,8 @@ function getRandom(max) {
 
 contentScriptPort.postMessage({ action: "contentLoad" });
 contentScriptPort.onMessage.addListener(enableSpecifiedExtension);
+chrome.runtime.onConnect.addListener(port => {
+  if (port.name === "contentPort") {
+    port.onMessage.addListener(setIntervalChange);
+  }
+})
