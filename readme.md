@@ -1,3 +1,4 @@
+# Yet another unmaintained project :(
 ## dbotcamp : An *ugly* extension for opening crate battle links on the chat.
 
 ### Warning
